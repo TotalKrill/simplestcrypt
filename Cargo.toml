@@ -5,6 +5,7 @@ authors = ["Kristoffer Ödmark <kristoffer.odmark90@gmail.com>"]
 edition = "2018"
 description = "Simplest way to perform a symmetric encryption, using a preshared key. Very small wrapper around aes-siv crate, with randomly generated nonces, for anything more advanced, use aes-siv instead"
 license = "MIT"
+repository = "https://github.com/TotalKrill/simplestcrypt"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
