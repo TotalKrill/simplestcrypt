@@ -125,7 +125,7 @@ pub fn decrypt(password: &[u8], encrypted: &Encrypted) -> Result<Vec<u8>, Decryp
 /// Password cannot be longer than 32 bytes
 pub fn deserialize_and_decrypt(
     password: &[u8],
-    serialized: &Vec<u8>,
+    serialized: &[u8],
 ) -> Result<Vec<u8>, DecryptError> {
     let deser: Encrypted =
         bincode::deserialize(&serialized).map_err(|_e| DecryptError::DeserializeFail)?;
