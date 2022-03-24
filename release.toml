@@ -1,0 +1,4 @@
+tag-prefix = "{{crate_name}}-"
+publish = false
+dev-version = false
+pre-release-commit-message = "Release {{crate_name}} {{version}}"
