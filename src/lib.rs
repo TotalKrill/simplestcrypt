@@ -26,7 +26,8 @@ use aes_siv::Aes128SivAead;
 use rand::RngCore;
 use serde::{Deserialize, Serialize};
 
-/// Contains the Nonce used in the encryption process
+/// Contains the Nonce used in the encryption process. This type is inflated when serialized using bincode
+/// (16 bytes for the nonce + 8 bytes with size of the Vec + (rest of bytes for Vec ciphertext).
 #[derive(Deserialize, Serialize)]
 pub struct Encrypted {
     nonce: [u8; 16],
