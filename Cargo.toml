@@ -1,8 +1,8 @@
 [package]
 name = "simplestcrypt"
-version = "0.1.3"
+version = "0.1.4"
 authors = ["Kristoffer Ödmark <kristoffer.odmark90@gmail.com>"]
-edition = "2018"
+edition = "2021"
 description = "Simplest way to perform a symmetric encryption, using a preshared key. Very small wrapper around aes-siv crate, with randomly generated nonces, for anything more advanced, use aes-siv instead"
 license = "MIT"
 repository = "https://github.com/TotalKrill/simplestcrypt"
@@ -13,6 +13,6 @@ readme = "README.md"
 [dependencies]
 
 aes-siv = "0.6"
-rand = "0.7"
+rand = "0.8"
 serde = {version = "1.0", features = ["derive"]}
 bincode = "1.3"
