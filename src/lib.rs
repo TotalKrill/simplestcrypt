@@ -11,7 +11,7 @@
 //! use std::str;
 //! fn main() {
 //!     let payload = "Hello world!".as_bytes();
-//!     let password = b"hello wooooooooo";
+//!     let password = b"secretpassword";
 //!
 //!     let encrypted = simplestcrypt::encrypt_and_serialize(&password[..], &payload).unwrap();
 //!     let plain = simplestcrypt::deserialize_and_decrypt(&password[..], &encrypted).unwrap();
@@ -20,8 +20,8 @@
 //! }
 //! ```
 
-use aes_siv::aead::{generic_array::GenericArray, Aead, NewAead};
-use aes_siv::Aes128SivAead;
+use aes_siv::aead::{generic_array::GenericArray, Aead};
+use aes_siv::{Aes128SivAead, KeyInit};
 
 use rand::RngCore;
 use serde::{Deserialize, Serialize};
@@ -66,7 +66,7 @@ pub fn encrypt(password: &[u8], bytes: &[u8]) -> Result<Encrypted, EncryptError>
     }
     let key = GenericArray::from_slice(&key);
 
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
     let mut nonce: [u8; 16] = [0; 16];
     rng.fill_bytes(&mut nonce);
     let noncearray = GenericArray::from_slice(&nonce);
@@ -88,7 +88,8 @@ pub fn encrypt(password: &[u8], bytes: &[u8]) -> Result<Encrypted, EncryptError>
 pub fn encrypt_and_serialize(password: &[u8], bytes: &[u8]) -> Result<Vec<u8>, EncryptError> {
     let encrypted = encrypt(password, bytes)?;
 
-    bincode::serialize(&encrypted).map_err(|_e| EncryptError::SerializeFail)
+    bincode::serde::encode_to_vec(&encrypted, bincode::config::standard())
+        .map_err(|_e| EncryptError::SerializeFail)
 }
 
 /// Decrypts an Encrypted structure using Aes128SivAead and returns a decrypted vector using the
@@ -128,8 +129,9 @@ pub fn deserialize_and_decrypt(
     password: &[u8],
     serialized: &[u8],
 ) -> Result<Vec<u8>, DecryptError> {
-    let deser: Encrypted =
-        bincode::deserialize(&serialized).map_err(|_e| DecryptError::DeserializeFail)?;
+    let (deser, _): (Encrypted, _) =
+        bincode::serde::decode_from_slice(&serialized, bincode::config::standard())
+            .map_err(|_e| DecryptError::DeserializeFail)?;
 
     let plain = decrypt(&password[..], &deser).map_err(|_e| DecryptError::DecryptFail)?;
 
